@@ -43,16 +43,16 @@ module pcileech_pcie_cfg_a7(
     wire [3:0]      in_type     = in_data64[15:12];
 	
     fifo_64_64 i_fifo_pcie_cfg_tx(
-        .rst            ( rst                   ),
-        .wr_clk         ( clk_sys               ),
-        .rd_clk         ( clk_pcie              ),
-        .din            ( dfifo.tx_data         ),
-        .wr_en          ( dfifo.tx_valid        ),
-        .rd_en          ( in_rden               ),
-        .dout           ( in_dout               ),
-        .full           (                       ),
-        .empty          ( in_empty              ),
-        .valid          ( in_valid              )
+        .rst            ( rst                    ),
+        .wr_clk         ( clk_sys                ),
+        .rd_clk         ( clk_pcie               ),
+        .din            ( dfifo.tx_data          ),
+        .wr_en          ( dfifo.tx_valid         ),
+        .rd_en          ( in_rden                ),
+        .dout           ( in_dout                ),
+        .full           (                        ),
+        .empty          ( in_empty               ),
+        .valid          ( in_valid               )
     );
     
     // ------------------------------------------------------------------------
@@ -64,17 +64,17 @@ module pcileech_pcie_cfg_a7(
     wire            pcie_cfg_rx_almost_full;
     
     fifo_32_32_clk2 i_fifo_pcie_cfg_rx(
-        .rst            ( rst                   ),
-        .wr_clk         ( clk_pcie              ),
-        .rd_clk         ( clk_sys               ),
-        .din            ( out_data              ),
-        .wr_en          ( out_wren              ),
-        .rd_en          ( dfifo.rx_rd_en        ),
-        .dout           ( dfifo.rx_data         ),
-        .full           (                       ),
+        .rst            ( rst                    ),
+        .wr_clk         ( clk_pcie               ),
+        .rd_clk         ( clk_sys                ),
+        .din            ( out_data               ),
+        .wr_en          ( out_wren               ),
+        .rd_en          ( dfifo.rx_rd_en         ),
+        .dout           ( dfifo.rx_data          ),
+        .full           (                        ),
         .almost_full    ( pcie_cfg_rx_almost_full ),
-        .empty          (                       ),
-        .valid          ( dfifo.rx_valid        )
+        .empty          (                        ),
+        .valid          ( dfifo.rx_valid         )
     );
     
     // ------------------------------------------------------------------------
@@ -126,7 +126,7 @@ module pcileech_pcie_cfg_a7(
     assign ro[102]      = ctx.pl_sel_lnk_rate;          //
     assign ro[103]      = ctx.pl_directed_change_done;  // +00D:
     assign ro[104]      = ctx.pl_received_hot_rst;      //
-    assign ro[126:105]  = 0;                            //       SLACK
+    assign ro[126:105]  = 0;                            //        SLACK
     assign ro[127]      = ctx.cfg_mgmt_rd_wr_done;      //
     // PCIe CFG MGMT
     assign ro[159:128]  = ctx.cfg_mgmt_do;              // +010:
@@ -144,7 +144,7 @@ module pcileech_pcie_cfg_a7(
     assign ro[187]      = ctx.cfg_pmcsr_pme_en;         //
     assign ro[189:188]  = ctx.cfg_pmcsr_powerstate;     //
     assign ro[190]      = ctx.cfg_pmcsr_pme_status;     //
-    assign ro[191]      = 0;                            //       SLACK
+    assign ro[191]      = 0;                            //        SLACK
     assign ro[207:192]  = ctx.cfg_dcommand;             // +018:
     assign ro[223:208]  = ctx.cfg_dcommand2;            // +01A:
     assign ro[239:224]  = ctx.cfg_dstatus;              // +01C:
@@ -152,17 +152,17 @@ module pcileech_pcie_cfg_a7(
     assign ro[271:256]  = ctx.cfg_lstatus;              // +020:
     assign ro[287:272]  = ctx.cfg_status;               // +022:
     assign ro[293:288]  = ctx.tx_buf_av;                // +024:
-    assign ro[294]      = ctx.tx_cfg_req;               //
+    assign ro[294]      = ctx.tx_cfg_req;                //
     assign ro[295]      = ctx.tx_err_drop;              //
     assign ro[302:296]  = ctx.cfg_vc_tcvc_map;          // +025:
-    assign ro[303]      = 0;                            //       SLACK
+    assign ro[303]      = 0;                            //        SLACK
     assign ro[304]      = ctx.cfg_root_control_pme_int_en;              // +026:
     assign ro[305]      = ctx.cfg_root_control_syserr_corr_err_en;      //
     assign ro[306]      = ctx.cfg_root_control_syserr_fatal_err_en;     //
     assign ro[307]      = ctx.cfg_root_control_syserr_non_fatal_err_en; //
     assign ro[308]      = ctx.cfg_slot_control_electromech_il_ctl_pulse;//
     assign ro[309]      = ctx.cfg_to_turnoff;                           //
-    assign ro[319:310]  = 0;                                            //       SLACK
+    assign ro[319:310]  = 0;                                            //        SLACK
     // PCIe INTERRUPT
     assign ro[327:320]  = ctx.cfg_interrupt_do;         // +028:
     assign ro[330:328]  = ctx.cfg_interrupt_mmenable;   // +029:
@@ -170,10 +170,10 @@ module pcileech_pcie_cfg_a7(
     assign ro[332]      = ctx.cfg_interrupt_msixenable; //
     assign ro[333]      = ctx.cfg_interrupt_msixfm;     //
     assign ro[334]      = ctx.cfg_interrupt_rdy;        //
-    assign ro[335]      = 0;                            //       SLACK
+    assign ro[335]      = 0;                            //        SLACK
     // CFG SPACE READ RESULT
     assign ro[345:336]  = rwi_cfgrd_addr;               // +02A:
-    assign ro[346]      = 0;                            //       SLACK
+    assign ro[346]      = 0;                            //        SLACK
     assign ro[347]      = rwi_cfgrd_valid;              //
     assign ro[351:348]  = rwi_cfgrd_byte_en;            //
     assign ro[383:352]  = rwi_cfgrd_data;               // +02C:
@@ -199,62 +199,62 @@ module pcileech_pcie_cfg_a7(
             rwi_cfg_mgmt_rd_en <= 1'b0;
             rwi_cfg_mgmt_wr_en <= 1'b0;
     
-            // MAGIC
-            rw[15:0]    <= 16'h6745;                // +000:
+            // MAGIC - Set to Device ID 1107 (Qualcomm)
+            rw[15:0]    <= 16'h1107;                // +000:
             // SPECIAL START TASK BLOCK (write 1 to start action)
             rw[16]      <= 0;                       // +002: CFG RD EN
-            rw[17]      <= 0;                       //       CFG WR EN
-            rw[18]      <= 0;                       //       WAIT FOR PCIe CFG SPACE RD/WR COMPLETION BEFORE ACCEPT NEW FIFO READ/WRITES
-            rw[19]      <= 0;                       //       TLP_STATIC TX ENABLE
-            rw[20]      <= 0;                       //       CFGSPACE_STATUS_REGISTER_AUTO_CLEAR [master abort flag]
-            rw[21]      <= 0;                       //       CFGSPACE_COMMAND_REGISTER_AUTO_SET [bus master and other flags (set in rw[143:128] <= 16'h....;)]
-            rw[31:22]   <= 0;                       //       RESERVED FUTURE
+            rw[17]      <= 0;                       //        CFG WR EN
+            rw[18]      <= 0;                       //        WAIT FOR PCIe CFG SPACE RD/WR COMPLETION BEFORE ACCEPT NEW FIFO READ/WRITES
+            rw[19]      <= 0;                       //        TLP_STATIC TX ENABLE
+            rw[20]      <= 0;                       //        CFGSPACE_STATUS_REGISTER_AUTO_CLEAR [master abort flag]
+            rw[21]      <= 0;                       //        CFGSPACE_COMMAND_REGISTER_AUTO_SET [bus master and other flags]
+            rw[31:22]   <= 0;                       //        RESERVED FUTURE
             // SIZEOF / BYTECOUNT [little-endian]
             rw[63:32]   <= $bits(rw) >> 3;          // +004: bytecount [little endian]
-            // DSN
-            rw[127:64]  <= 64'h0000000101000A35;    // +008: cfg_dsn
+            // DSN - Set to include Vendor ID 17CB (Qualcomm)
+            rw[127:64]  <= 64'h0123456789ABCBCB;    // +008: cfg_dsn
             // PCIe CFG MGMT
             rw[159:128] <= 0;                       // +010: cfg_mgmt_di
             rw[169:160] <= 0;                       // +014: cfg_mgmt_dwaddr
-            rw[170]     <= 0;                       //       cfg_mgmt_wr_readonly
-            rw[171]     <= 0;                       //       cfg_mgmt_wr_rw1c_as_rw
-            rw[175:172] <= 4'hf;                    //       cfg_mgmt_byte_en
+            rw[170]     <= 0;                       //        cfg_mgmt_wr_readonly
+            rw[171]     <= 0;                       //        cfg_mgmt_wr_rw1c_as_rw
+            rw[175:172] <= 4'hf;                    //        cfg_mgmt_byte_en
             // PCIe PL PHY
             rw[176]     <= 0;                       // +016: pl_directed_link_auton
-            rw[178:177] <= 0;                       //       pl_directed_link_change
-            rw[179]     <= 1;                       //       pl_directed_link_speed 
-            rw[181:180] <= 0;                       //       pl_directed_link_width            
-            rw[182]     <= 1;                       //       pl_upstream_prefer_deemph
-            rw[183]     <= 0;                       //       pl_transmit_hot_rst
+            rw[178:177] <= 0;                       //        pl_directed_link_change
+            rw[179]     <= 1;                       //        pl_directed_link_speed 
+            rw[181:180] <= 0;                       //        pl_directed_link_width            
+            rw[182]     <= 1;                       //        pl_upstream_prefer_deemph
+            rw[183]     <= 0;                       //        pl_transmit_hot_rst
             rw[184]     <= 0;                       // +017: pl_downstream_deemph_source
-            rw[191:185] <= 0;                       //       SLACK  
+            rw[191:185] <= 0;                       //        SLACK  
             // PCIe INTERRUPT
             rw[199:192] <= 0;                       // +018: cfg_interrupt_di
             rw[204:200] <= 0;                       // +019: cfg_pciecap_interrupt_msgnum
-            rw[205]     <= 0;                       //       cfg_interrupt_assert
-            rw[206]     <= 0;                       //       cfg_interrupt
-            rw[207]     <= 0;                       //       cfg_interrupt_stat
+            rw[205]     <= 0;                       //        cfg_interrupt_assert
+            rw[206]     <= 0;                       //        cfg_interrupt
+            rw[207]     <= 0;                       //        cfg_interrupt_stat
             // PCIe CTRL
             rw[209:208] <= 0;                       // +01A: cfg_pm_force_state
-            rw[210]     <= 0;                       //       cfg_pm_force_state_en
-            rw[211]     <= 0;                       //       cfg_pm_halt_aspm_l0s
-            rw[212]     <= 0;                       //       cfg_pm_halt_aspm_l1
-            rw[213]     <= 0;                       //       cfg_pm_send_pme_to
-            rw[214]     <= 0;                       //       cfg_pm_wake
-            rw[215]     <= 0;                       //       cfg_trn_pending
+            rw[210]     <= 0;                       //        cfg_pm_force_state_en
+            rw[211]     <= 0;                       //        cfg_pm_halt_aspm_l0s
+            rw[212]     <= 0;                       //        cfg_pm_halt_aspm_l1
+            rw[213]     <= 0;                       //        cfg_pm_send_pme_to
+            rw[214]     <= 0;                       //        cfg_pm_wake
+            rw[215]     <= 0;                       //        cfg_trn_pending
             rw[216]     <= 0;                       // +01B: cfg_turnoff_ok
-            rw[217]     <= 1;                       //       rx_np_ok
-            rw[218]     <= 1;                       //       rx_np_req
-            rw[219]     <= 1;                       //       tx_cfg_gnt
-            rw[223:220] <= 0;                       //       SLACK 
+            rw[217]     <= 1;                       //        rx_np_ok
+            rw[218]     <= 1;                       //        rx_np_req
+            rw[219]     <= 1;                       //        tx_cfg_gnt
+            rw[223:220] <= 0;                       //        SLACK 
             // PCIe STATIC TLP TRANSMIT
-            rw[224+:8]  <= 0;                       // +01C: TLP_STATIC TLP DWORD VALID [each-2bit: [0] = last, [1] = valid] [TLP DWORD 0-3]
-            rw[232+:8]  <= 0;                       // +01D: TLP_STATIC TLP DWORD VALID [each-2bit: [0] = last, [1] = valid] [TLP DWORD 4-7]
-            rw[240+:16] <= 0;                       // +01E: TLP_STATIC TLP TX SLEEP (ticks) [little-endian]
-            rw[256+:384] <= 0;                      // +020: TLP_STATIC TLP [8*32-bit hdr+data]
+            rw[224+:8]  <= 0;                       // +01C: TLP_STATIC TLP DWORD VALID
+            rw[232+:8]  <= 0;                       // +01D: TLP_STATIC TLP DWORD VALID
+            rw[240+:16] <= 0;                       // +01E: TLP_STATIC TLP TX SLEEP
+            rw[256+:384] <= 0;                      // +020: TLP_STATIC TLP
             rw[640+:32] <= 0;                       // +050: TLP_STATIC TLP RETRANSMIT COUNT
             // PCIe STATUS register clear timer
-            rw[672+:32] <= 62500;                   // +054: CFGSPACE_STATUS_CLEAR TIMER (ticks) [little-endian] [default = 1ms - 62.5k @ 62.5MHz]
+            rw[672+:32] <= 62500;                   // +054: CFGSPACE_STATUS_CLEAR TIMER
             
         end
     endtask
@@ -296,15 +296,15 @@ module pcileech_pcie_cfg_a7(
     assign ctx.tx_cfg_gnt                   = rw[219];
     
     assign tlps_static.tdata[127:0]         = rwi_tlp_static_2nd ? {
-        rw[(256+32*7+00)+:8], rw[(256+32*7+08)+:8], rw[(256+32*7+16)+:8], rw[(256+32*7+24)+:8],   // STATIC TLP DWORD7
-        rw[(256+32*6+00)+:8], rw[(256+32*6+08)+:8], rw[(256+32*6+16)+:8], rw[(256+32*6+24)+:8],   // STATIC TLP DWORD6
-        rw[(256+32*5+00)+:8], rw[(256+32*5+08)+:8], rw[(256+32*5+16)+:8], rw[(256+32*5+24)+:8],   // STATIC TLP DWORD5
-        rw[(256+32*4+00)+:8], rw[(256+32*4+08)+:8], rw[(256+32*4+16)+:8], rw[(256+32*4+24)+:8]    // STATIC TLP DWORD4
+        rw[(256+32*7+00)+:8], rw[(256+32*7+08)+:8], rw[(256+32*7+16)+:8], rw[(256+32*7+24)+:8],
+        rw[(256+32*6+00)+:8], rw[(256+32*6+08)+:8], rw[(256+32*6+16)+:8], rw[(256+32*6+24)+:8],
+        rw[(256+32*5+00)+:8], rw[(256+32*5+08)+:8], rw[(256+32*5+16)+:8], rw[(256+32*5+24)+:8],
+        rw[(256+32*4+00)+:8], rw[(256+32*4+08)+:8], rw[(256+32*4+16)+:8], rw[(256+32*4+24)+:8]
     } : {
-        rw[(256+32*3+00)+:8], rw[(256+32*3+08)+:8], rw[(256+32*3+16)+:8], rw[(256+32*3+24)+:8],   // STATIC TLP DWORD3
-        rw[(256+32*2+00)+:8], rw[(256+32*2+08)+:8], rw[(256+32*2+16)+:8], rw[(256+32*2+24)+:8],   // STATIC TLP DWORD2
-        rw[(256+32*1+00)+:8], rw[(256+32*1+08)+:8], rw[(256+32*1+16)+:8], rw[(256+32*1+24)+:8],   // STATIC TLP DWORD1
-        rw[(256+32*0+00)+:8], rw[(256+32*0+08)+:8], rw[(256+32*0+16)+:8], rw[(256+32*0+24)+:8]    // STATIC TLP DWORD0
+        rw[(256+32*3+00)+:8], rw[(256+32*3+08)+:8], rw[(256+32*3+16)+:8], rw[(256+32*3+24)+:8],
+        rw[(256+32*2+00)+:8], rw[(256+32*2+08)+:8], rw[(256+32*2+16)+:8], rw[(256+32*2+24)+:8],
+        rw[(256+32*1+00)+:8], rw[(256+32*1+08)+:8], rw[(256+32*1+16)+:8], rw[(256+32*1+24)+:8],
+        rw[(256+32*0+00)+:8], rw[(256+32*0+08)+:8], rw[(256+32*0+16)+:8], rw[(256+32*0+24)+:8]
     };
     assign tlps_static.tkeepdw              = rwi_tlp_static_2nd ? { rw[224+2*7], rw[224+2*6], rw[224+2*5], rw[224+2*4] } : { rw[224+2*3], rw[224+2*2], rw[224+2*1], rw[224+2*0] };
     assign tlps_static.tlast                = rwi_tlp_static_2nd || rw[224+2*3+1] || rw[224+2*2+1] || rw[224+2*1+1] || rw[224+2*0+1];
@@ -328,10 +328,6 @@ module pcileech_pcie_cfg_a7(
     wire        in_cmd_read         = in_dout[12] & in_valid;
     wire        in_cmd_write        = in_dout[13] & in_cmd_address_byte[15] & in_valid;
     wire        pcie_cfg_rw_en      = rwi_cfg_mgmt_rd_en | rwi_cfg_mgmt_wr_en | rw[RWPOS_CFG_RD_EN] | rw[RWPOS_CFG_WR_EN];
-    // in_rden = request data from incoming fifo. Only do this if there is space
-    // in the output fifo and every 2nd clock cycle (in case a resulting write
-    // starts an action that will last longer than a single clock there must be
-    // time to react and stop reading incoming read/writes until processed).
     assign in_rden = tickcount64[1] & ~pcie_cfg_rx_almost_full & ( ~rw[RWPOS_CFG_WAIT_COMPLETE] | ~pcie_cfg_rw_en);
     
     initial pcileech_pcie_cfg_a7_initialvalues();
@@ -364,15 +360,15 @@ module pcileech_pcie_cfg_a7(
                     else begin
                         rwi_count_cfgspace_status_cl <= 0;
                         rw[RWPOS_CFG_WR_EN] <= 1'b1;
-                        rw[143:128] <= 16'h0007;                            // cfg_mgmt_di: command register [update to set individual command register bits]
-                        rw[159:144] <= 16'hff00;                            // cfg_mgmt_di: status register [do not update]
-                        rw[169:160] <= 1;                                   // cfg_mgmt_dwaddr
-                        rw[170]     <= 0;                                   // cfg_mgmt_wr_readonly
-                        rw[171]     <= 0;                                   // cfg_mgmt_wr_rw1c_as_rw
-                        rw[172]     <= rw[RWPOS_CFG_CFGSPACE_COMMAND_EN];   // cfg_mgmt_byte_en: command register
-                        rw[173]     <= rw[RWPOS_CFG_CFGSPACE_COMMAND_EN];   // cfg_mgmt_byte_en: command register
-                        rw[174]     <= 0;                                   // cfg_mgmt_byte_en: status register
-                        rw[175]     <= rw[RWPOS_CFG_CFGSPACE_STATUS_CL_EN]; // cfg_mgmt_byte_en: status register
+                        rw[143:128] <= 16'h0007;
+                        rw[159:144] <= 16'hff00;
+                        rw[169:160] <= 1;
+                        rw[170]     <= 0;
+                        rw[171]     <= 0;
+                        rw[172]     <= rw[RWPOS_CFG_CFGSPACE_COMMAND_EN];
+                        rw[173]     <= rw[RWPOS_CFG_CFGSPACE_COMMAND_EN];
+                        rw[174]     <= 0;
+                        rw[175]     <= rw[RWPOS_CFG_CFGSPACE_STATUS_CL_EN];
                     end
 
                 // CONFIG SPACE READ/WRITE                        
@@ -399,22 +395,22 @@ module pcileech_pcie_cfg_a7(
                     end
                     
                 // STATIC_TLP TRANSMIT
-                if ( (rwi_tlp_static_valid && rwi_tlp_static_2nd) || ~rw[RWPOS_CFG_STATIC_TLP_TX_EN] ) begin    // STATE (3)
+                if ( (rwi_tlp_static_valid && rwi_tlp_static_2nd) || ~rw[RWPOS_CFG_STATIC_TLP_TX_EN] ) begin
                     rwi_tlp_static_valid    <= 1'b0;
                     rwi_tlp_static_has_data <= 1'b0;
                 end
-                else if ( rwi_tlp_static_has_data && tlps_static.tready && rwi_tlp_static_2nd ) begin  // STATE (1)
+                else if ( rwi_tlp_static_has_data && tlps_static.tready && rwi_tlp_static_2nd ) begin
                      rwi_tlp_static_valid   <= 1'b1;
                      rwi_tlp_static_2nd     <= 1'b0;
                 end
-                else if ( rwi_tlp_static_has_data && tlps_static.tready && !rwi_tlp_static_2nd ) begin // STATE (2)
+                else if ( rwi_tlp_static_has_data && tlps_static.tready && !rwi_tlp_static_2nd ) begin
                      rwi_tlp_static_valid   <= 1'b1;
                      rwi_tlp_static_2nd     <= 1'b1;
                 end
-                else if ( ((tickcount64[0+:16] & rw[240+:16]) == rw[240+:16]) & (rw[640+:32] > 0) & rw[224+2*0] ) begin   // IDLE STATE (0)
+                else if ( ((tickcount64[0+:16] & rw[240+:16]) == rw[240+:16]) & (rw[640+:32] > 0) & rw[224+2*0] ) begin
                     rwi_tlp_static_has_data <= 1'b1;
                     rwi_tlp_static_2nd      <= 1'b1;
-                    rw[640+:32] <= rw[640+:32] - 1;     // count - 1
+                    rw[640+:32] <= rw[640+:32] - 1;
                     if ( rw[640+:32] == 32'h00000001 )
                         rw[RWPOS_CFG_STATIC_TLP_TX_EN] <= 1'b0;
                 end
